@@ -3,7 +3,6 @@ package com.reactlibrary.createthumbnail;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build.VERSION;
 import android.text.TextUtils;
@@ -19,6 +18,7 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 
+import wseemann.media.FFmpegMediaMetadataRetriever;
 import org.apache.commons.io.comparator.LastModifiedFileComparator;
 
 import java.io.File;
@@ -169,7 +169,7 @@ public class CreateThumbnailModule extends ReactContextBaseJavaModule {
     }
 
     private static Bitmap getBitmapAtTime(Context context, String filePath, int time, Map headers) {
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        FFmpegMediaMetadataRetriever retriever = new FFmpegMediaMetadataRetriever();
         if (URLUtil.isFileUrl(filePath)) {
             String decodedPath;
             try {
@@ -188,7 +188,7 @@ public class CreateThumbnailModule extends ReactContextBaseJavaModule {
             retriever.setDataSource(filePath, headers);
         }
   
-        Bitmap image = retriever.getFrameAtTime(time * 1000, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
+        Bitmap image = retriever.getFrameAtTime(time * 1000, FFmpegMediaMetadataRetriever.OPTION_CLOSEST);
         retriever.release();
         if (image == null) {
             throw new IllegalStateException("File doesn't exist or not supported");
